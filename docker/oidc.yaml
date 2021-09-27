@@ -1,0 +1,13 @@
+kind: oidc
+version: v2
+metadata:
+  name: keycloack
+spec:
+  redirect_url: "https://192.168.122.1:5000/v1/webapi/oidc/callback"
+  client_id: teleport
+  display: Keycloack
+  client_secret: a91b1143-5c06-46ff-a4fe-0b608b25781d
+  issuer_url: https://www.keycloak.org/app/
+  scope: [group]
+  claims_to_roles:
+    - {claim: "hd", value: "example.com", roles: ["editor"]}

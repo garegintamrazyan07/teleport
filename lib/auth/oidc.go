@@ -437,7 +437,7 @@ func (a *Server) calculateOIDCUser(connector types.OIDCConnector, claims jose.Cl
 		connectorName: connector.GetName(),
 		username:      ident.Email,
 	}
-
+	fmt.Println(p, "PPPPPPP")
 	p.traits = services.OIDCClaimsToTraits(claims)
 
 	var warnings []string

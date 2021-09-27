@@ -93,6 +93,7 @@ func (rc *ResourceCommand) Initialize(app *kingpin.Application, config *service.
 		types.KindTrustedCluster:          rc.createTrustedCluster,
 		types.KindGithubConnector:         rc.createGithubConnector,
 		types.KindCertAuthority:           rc.createCertAuthority,
+		types.KindOIDCConnector:           rc.createOIDCConnector,
 		types.KindClusterAuthPreference:   rc.createAuthPreference,
 		types.KindClusterNetworkingConfig: rc.createClusterNetworkingConfig,
 		types.KindSessionRecordingConfig:  rc.createSessionRecordingConfig,
@@ -219,6 +220,7 @@ func (rc *ResourceCommand) GetMany(client auth.ClientI) error {
 }
 
 func (rc *ResourceCommand) GetAll(client auth.ClientI) error {
+
 	rc.withSecrets = true
 	allKinds := services.GetResourceMarshalerKinds()
 	allRefs := make([]services.Ref, 0, len(allKinds))
@@ -356,6 +358,31 @@ func (rc *ResourceCommand) createGithubConnector(client auth.ClientI, raw servic
 	fmt.Printf("authentication connector %q has been %s\n",
 		connector.GetName(), UpsertVerb(exists, rc.force))
 	return nil
+}
+
+func (rc *ResourceCommand) createOIDCConnector(client auth.ClientI, raw services.UnknownResource) error {
+	ctx := context.TODO()
+	connector, err := services.UnmarshalOIDCConnector(raw.Raw)
+	if err != nil {
+		return trace.Wrap(err)
+	}
+	_, err = client.GetOIDCConnector(ctx, connector.GetName(), false)
+	if err != nil && !trace.IsNotFound(err) {
+		return trace.Wrap(err)
+	}
+	exists := (err == nil)
+	if !rc.force && exists {
+		return trace.AlreadyExists("authentication connector %q already exists",
+			connector.GetName())
+	}
+	err = client.UpsertOIDCConnector(ctx, connector)
+	if err != nil {
+		return trace.Wrap(err)
+	}
+	fmt.Printf("authentication connector %q has been %s\n",
+		connector.GetName(), UpsertVerb(exists, rc.force))
+	return nil
+
 }
 
 // createRole implements `tctl create role.yaml` command.
