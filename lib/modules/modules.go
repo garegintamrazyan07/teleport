@@ -144,6 +144,10 @@ func (p *defaultModules) Features() Features {
 		Kubernetes: true,
 		DB:         true,
 		App:        true,
+		OIDC: 		true,
+		SAML: 		true,
+		AccessControls: true,
+		AdvancedAccessWorkflows: true,
 	}
 }
 
