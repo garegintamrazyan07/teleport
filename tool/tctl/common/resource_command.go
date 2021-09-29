@@ -211,7 +211,6 @@ func (rc *ResourceCommand) GetMany(client auth.ClientI) error {
 	return nil
 }
 
-
 func (rc *ResourceCommand) createOIDCConnector(client auth.ClientI, raw services.UnknownResource) error {
 	ctx := context.TODO()
 	connector, err := services.UnmarshalOIDCConnector(raw.Raw)
@@ -237,7 +236,6 @@ func (rc *ResourceCommand) createOIDCConnector(client auth.ClientI, raw services
 
 }
 
-gi
 func (rc *ResourceCommand) GetAll(client auth.ClientI) error {
 	rc.withSecrets = true
 	allKinds := services.GetResourceMarshalerKinds()
